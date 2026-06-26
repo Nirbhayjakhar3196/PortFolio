@@ -42,22 +42,81 @@
 /* Custom Utilities */
 
 /* Holographic glassmorphism panels */
-.glass-panel {
+.glass-panel, .glass-panel-magenta, .glass-panel-blue {
   background: rgba(8, 8, 16, 0.65);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(0, 240, 255, 0.15);
+  border: 1px solid var(--card-border, rgba(0, 240, 255, 0.15));
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.7),
-              inset 0 0 12px rgba(0, 240, 255, 0.05);
+              inset 0 0 12px var(--card-inner, rgba(0, 240, 255, 0.05));
+  transition: transform 0.3s cubic-bezier(0.215, 0.61, 0.355, 1),
+              box-shadow 0.3s cubic-bezier(0.215, 0.61, 0.355, 1),
+              border-color 0.3s cubic-bezier(0.215, 0.61, 0.355, 1),
+              background-color 0.3s cubic-bezier(0.215, 0.61, 0.355, 1),
+              backdrop-filter 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
+  position: relative;
+  overflow: hidden;
+  transform-style: preserve-3d;
+}
+
+.glass-panel {
+  --card-border: rgba(0, 240, 255, 0.15);
+  --card-inner: rgba(0, 240, 255, 0.05);
+  --card-border-hover: rgba(0, 240, 255, 0.45);
+  --card-glow-hover: rgba(0, 240, 255, 0.25);
+  --card-ambient-hover: rgba(0, 240, 255, 0.12);
+  --card-inner-hover: rgba(0, 240, 255, 0.15);
 }
 
 .glass-panel-magenta {
-  background: rgba(8, 8, 16, 0.65);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 0, 127, 0.15);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.7),
-              inset 0 0 12px rgba(255, 0, 127, 0.05);
+  --card-border: rgba(255, 0, 127, 0.15);
+  --card-inner: rgba(255, 0, 127, 0.05);
+  --card-border-hover: rgba(255, 0, 127, 0.45);
+  --card-glow-hover: rgba(255, 0, 127, 0.25);
+  --card-ambient-hover: rgba(255, 0, 127, 0.12);
+  --card-inner-hover: rgba(255, 0, 127, 0.15);
+}
+
+.glass-panel-blue {
+  --card-border: rgba(0, 68, 255, 0.15);
+  --card-inner: rgba(0, 68, 255, 0.05);
+  --card-border-hover: rgba(0, 68, 255, 0.45);
+  --card-glow-hover: rgba(0, 68, 255, 0.25);
+  --card-ambient-hover: rgba(0, 68, 255, 0.12);
+  --card-inner-hover: rgba(0, 68, 255, 0.15);
+}
+
+.glass-panel::before, .glass-panel-magenta::before, .glass-panel-blue::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -150%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.15),
+    transparent
+  );
+  transform: skewX(-25deg);
+  transition: none;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.glass-panel:hover::before, .glass-panel-magenta:hover::before, .glass-panel-blue:hover::before {
+  left: 150%;
+  transition: left 0.85s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+.glass-panel:hover, .glass-panel-magenta:hover, .glass-panel-blue:hover {
+  background-color: rgba(12, 12, 23, 0.75);
+  backdrop-filter: blur(16px);
+  border-color: var(--card-border-hover);
+  box-shadow: 0 14px 40px 0 var(--card-ambient-hover),
+              0 0 20px 0 var(--glow-hover, var(--card-glow-hover)),
+              inset 0 0 22px var(--card-inner-hover);
 }
 
 /* Cyber Terminal scanlines */

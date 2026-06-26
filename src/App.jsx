@@ -104,6 +104,77 @@ const BootLoader = ({ onComplete }) => {
 function App() {
   const [booting, setBooting] = useState(true);
 
+  // Global premium 3D tilt and lift interaction for all cards (About, Achievements, Contact, Skills HUD, Hero)
+  useEffect(() => {
+    if (booting) return;
+
+    let activeCard = null;
+
+    const handleMouseMove = (e) => {
+      const card = e.target.closest('.glass-panel, .glass-panel-magenta, .glass-panel-blue');
+      if (!card) {
+        if (activeCard) {
+          resetCard(activeCard);
+          activeCard = null;
+        }
+        return;
+      }
+
+      // Skip project cards (they use custom Framer Motion springs for tilt/lift)
+      // and skip any containers housing canvases or explicit no-tilt instructions
+      if (card.closest('#projects') || card.querySelector('canvas') || card.classList.contains('no-tilt')) {
+        return;
+      }
+
+      if (activeCard && activeCard !== card) {
+        resetCard(activeCard);
+      }
+
+      activeCard = card;
+      updateCardTilt(card, e);
+    };
+
+    const handleMouseLeave = () => {
+      if (activeCard) {
+        resetCard(activeCard);
+        activeCard = null;
+      }
+    };
+
+    const updateCardTilt = (card, e) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      const px = (x / rect.width) - 0.5;
+      const py = (y / rect.height) - 0.5;
+
+      // Premium subtle 3D tilt (max 8 degrees rotation)
+      const tiltX = -py * 8;
+      const tiltY = px * 8;
+
+      card.style.transform = `perspective(1000px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) translateY(-8px) scale(1.015)`;
+      card.style.transition = 'transform 0.12s cubic-bezier(0.215, 0.61, 0.355, 1)';
+      card.style.transformStyle = 'preserve-3d';
+      
+      card.style.setProperty('--mouse-x', `${(x / rect.width) * 100}%`);
+      card.style.setProperty('--mouse-y', `${(y / rect.height) * 100}%`);
+    };
+
+    const resetCard = (card) => {
+      card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px) scale(1)';
+      card.style.transition = 'transform 0.35s cubic-bezier(0.215, 0.61, 0.355, 1)';
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseleave', handleMouseLeave);
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseleave', handleMouseLeave);
+    };
+  }, [booting]);
+
   return (
     <>
       {booting ? (

@@ -7,14 +7,16 @@ const ProjectCard = ({ project, index, onSelect }) => {
   const cardRef = useRef(null);
   const prefersReducedMotion = useReducedMotion();
   
-  // Track cursor position for 3D tilt effect
+  // Track cursor position for 3D tilt effect and hover lift
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
+  const yValue = useMotionValue(0);
 
-  // Set up spring animations for smooth tilt transitions
+  // Set up spring animations for smooth tilt and lift transitions
   const springConfig = { stiffness: 150, damping: 20 };
   const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [12, -12]), springConfig);
   const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-12, 12]), springConfig);
+  const y = useSpring(yValue, springConfig);
   
   const handleMouseMove = (e) => {
     if (prefersReducedMotion) return;
@@ -28,11 +30,13 @@ const ProjectCard = ({ project, index, onSelect }) => {
     
     mouseX.set(normalizedX);
     mouseY.set(normalizedY);
+    yValue.set(-8); // Lift card
   };
 
   const handleMouseLeave = () => {
     mouseX.set(0);
     mouseY.set(0);
+    yValue.set(0); // Reset lift
   };
 
   const borderColors = [
@@ -69,6 +73,7 @@ const ProjectCard = ({ project, index, onSelect }) => {
       style={{
         rotateX: prefersReducedMotion ? 0 : rotateX,
         rotateY: prefersReducedMotion ? 0 : rotateY,
+        y: prefersReducedMotion ? 0 : y,
         transformStyle: 'preserve-3d',
         perspective: 1000
       }}
