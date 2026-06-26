@@ -14,25 +14,40 @@ const Navbar = () => {
       } else {
         setScrolled(false);
       }
-
-      // Track active section for scroll highlights
-      const sections = ['home', 'about', 'skills', 'projects', 'achievements', 'contact'];
-      const scrollPosition = window.scrollY + 100;
-
-      for (const section of sections) {
-        const el = document.getElementById(section);
-        if (el) {
-          const top = el.offsetTop;
-          const height = el.offsetHeight;
-          if (scrollPosition >= top && scrollPosition < top + height) {
-            setActiveSection(section);
-          }
-        }
-      }
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    // Track active section using hardware-accelerated IntersectionObserver (prevents layout reflow)
+    const sections = ['home', 'about', 'skills', 'projects', 'achievements', 'contact'];
+    
+    const observerOptions = {
+      root: null,
+      rootMargin: '-40% 0px -40% 0px', // Center trigger
+      threshold: 0
+    };
+
+    const observerCallback = (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setActiveSection(entry.target.id);
+        }
+      });
+    };
+
+    const observer = new IntersectionObserver(observerCallback, observerOptions);
+
+    sections.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) {
+        observer.observe(el);
+      }
+    });
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      observer.disconnect();
+    };
   }, []);
 
   const navLinks = [

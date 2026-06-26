@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { ReactLenis } from 'lenis/react';
+import { Suspense } from 'react';
 import Navbar from './components/ui/Navbar';
 import Hero from './components/ui/Hero';
-import About from './components/ui/About';
-import Skills from './components/ui/Skills';
-import ProjectShowcase from './components/ui/ProjectShowcase';
-import Achievements from './components/ui/Achievements';
-import Contact from './components/ui/Contact';
 import InteractiveCursor from './components/ui/InteractiveCursor';
 import NeonDivider from './components/ui/NeonDivider';
+
+const About = React.lazy(() => import('./components/ui/About'));
+const Skills = React.lazy(() => import('./components/ui/Skills'));
+const ProjectShowcase = React.lazy(() => import('./components/ui/ProjectShowcase'));
+const Achievements = React.lazy(() => import('./components/ui/Achievements'));
+const Contact = React.lazy(() => import('./components/ui/Contact'));
+
 
 // Futuristic Startup Console Loader
 const BootLoader = ({ onComplete }) => {
@@ -188,15 +191,25 @@ function App() {
             <main className="w-full">
               <Hero />
               <NeonDivider color="cyan" />
-              <About />
+              <Suspense fallback={<div className="h-96 flex items-center justify-center font-mono text-[10px] text-cyber-cyan">LOADING_BIOMETRICS...</div>}>
+                <About />
+              </Suspense>
               <NeonDivider color="magenta" />
-              <Skills />
+              <Suspense fallback={<div className="h-96 flex items-center justify-center font-mono text-[10px] text-cyber-cyan">LOADING_SKILLS_CORE...</div>}>
+                <Skills />
+              </Suspense>
               <NeonDivider color="cyan" />
-              <ProjectShowcase />
+              <Suspense fallback={<div className="h-96 flex items-center justify-center font-mono text-[10px] text-cyber-cyan">LOADING_PROJECTS...</div>}>
+                <ProjectShowcase />
+              </Suspense>
               <NeonDivider color="yellow" />
-              <Achievements />
+              <Suspense fallback={<div className="h-96 flex items-center justify-center font-mono text-[10px] text-cyber-yellow">LOADING_DASHBOARD...</div>}>
+                <Achievements />
+              </Suspense>
               <NeonDivider color="magenta" />
-              <Contact />
+              <Suspense fallback={<div className="h-96 flex items-center justify-center font-mono text-[10px] text-cyber-magenta">LOADING_TERMINAL...</div>}>
+                <Contact />
+              </Suspense>
             </main>
           </div>
         </ReactLenis>

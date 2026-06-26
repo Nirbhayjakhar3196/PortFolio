@@ -3,7 +3,8 @@ import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Html, AdaptiveDpr, AdaptiveEvents } from '@react-three/drei';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Layers, HelpCircle, Eye } from 'lucide-react';
-import SkillsCore from '../canvas/SkillsCore';
+
+const SkillsCore = React.lazy(() => import('../canvas/SkillsCore'));
 
 const SkillsLoader = () => {
   return (

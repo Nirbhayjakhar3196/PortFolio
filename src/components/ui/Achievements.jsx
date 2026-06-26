@@ -70,7 +70,7 @@ const Achievements = () => {
   const achievementsData = [
     {
       title: "LeetCode Solved",
-      value: "87",
+      value: "100",
       suffix: "+",
       description: "Data Structures & Algorithms problem solving proficiency.",
       icon: Code2,

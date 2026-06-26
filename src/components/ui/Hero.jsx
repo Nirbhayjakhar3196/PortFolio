@@ -1,11 +1,12 @@
-import React, { Suspense, useEffect, useState } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Terminal, Download, ArrowRight, Shield } from 'lucide-react';
 import { useLenis } from 'lenis/react';
 import * as THREE from 'three';
-import RobotWorkstation from '../canvas/RobotWorkstation';
 import CyberParticles from '../canvas/CyberParticles';
+
+const RobotWorkstation = React.lazy(() => import('../canvas/RobotWorkstation'));
 
 // A custom cyberpunk loading screen inside the canvas
 const CanvasLoader = () => {
@@ -24,15 +25,6 @@ import { Html, AdaptiveDpr, AdaptiveEvents } from '@react-three/drei';
 
 const Hero = () => {
   const prefersReducedMotion = useReducedMotion();
-  const [scrollY, setScrollY] = useState(0);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrollY(window.scrollY);
-    };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   const lenis = useLenis();
 
@@ -57,10 +49,11 @@ const Hero = () => {
         return;
       }
       
+      const currentScrollY = typeof window !== 'undefined' ? window.scrollY : 0;
       // Starting camera position: [0, 0.5, 4.5]
       // Zoom in deeper based on scroll (camera moves closer, Z decreases)
-      const targetZ = Math.max(1.8, 4.5 - scrollY * 0.0045);
-      const targetY = 0.5 - scrollY * 0.0008;
+      const targetZ = Math.max(1.8, 4.5 - currentScrollY * 0.0045);
+      const targetY = 0.5 - currentScrollY * 0.0008;
       
       state.camera.position.z = THREE.MathUtils.lerp(state.camera.position.z, targetZ, 0.05);
       state.camera.position.y = THREE.MathUtils.lerp(state.camera.position.y, targetY, 0.05);

@@ -5,11 +5,19 @@ import * as THREE from 'three';
 const CyberParticles = ({ count = 120 }) => {
   const pointsRef = useRef();
 
+  // Detect mobile/touch-only environments for adaptive density scaling
+  const isTouchMobile = useMemo(() => {
+    if (typeof window === 'undefined') return false;
+    return window.innerWidth < 768 || navigator.maxTouchPoints > 0;
+  }, []);
+
+  const activeCount = isTouchMobile ? Math.min(count, 40) : count;
+
   // Create random position coordinates and velocities
   const [positions, velocities] = useMemo(() => {
-    const pos = new Float32Array(count * 3);
-    const vels = new Float32Array(count);
-    for (let i = 0; i < count; i++) {
+    const pos = new Float32Array(activeCount * 3);
+    const vels = new Float32Array(activeCount);
+    for (let i = 0; i < activeCount; i++) {
       // Spread particles across a wide 3D space
       pos[i * 3] = (Math.random() - 0.5) * 30; // X
       pos[i * 3 + 1] = (Math.random() - 0.5) * 20; // Y
@@ -17,9 +25,15 @@ const CyberParticles = ({ count = 120 }) => {
       vels[i] = 0.02 + Math.random() * 0.05; // Fall velocity
     }
     return [pos, vels];
-  }, [count]);
+  }, [activeCount]);
 
   useFrame((state) => {
+    // 1. Paused state optimizations: check if tab is inactive
+    if (document.hidden) return;
+    
+    // 2. Viewport optimization: skip coordinate updates if section is offscreen
+    if (typeof window !== 'undefined' && window.scrollY > window.innerHeight + 100) return;
+
     if (!pointsRef.current) return;
     
     const geo = pointsRef.current.geometry;
@@ -29,7 +43,7 @@ const CyberParticles = ({ count = 120 }) => {
     const mouseX = state.pointer.x * 2;
     const mouseY = state.pointer.y * 2;
 
-    for (let i = 0; i < count; i++) {
+    for (let i = 0; i < activeCount; i++) {
       let y = positionsAttr.getY(i);
       let x = positionsAttr.getX(i);
       
@@ -75,3 +89,4 @@ const CyberParticles = ({ count = 120 }) => {
 };
 
 export default React.memo(CyberParticles);
+

@@ -77,6 +77,7 @@ const SkillChip = React.memo(({ name, category, orbitRadius, initialAngle, speed
 
   // Orbit loop (paused/slowed when hovered or highlighted)
   useFrame((state, delta) => {
+    if (document.hidden) return;
     if (!isVisibleRef.current) return;
     if (!meshRef.current) return;
     
@@ -280,11 +281,20 @@ const SkillsCore = ({ activeCategory = 'all' }) => {
     return () => observer.disconnect();
   }, []);
 
-  // Static 40 points around core
+  // Detect touch/mobile environments for adaptive performance scaling
+  const isTouchMobile = useMemo(() => {
+    if (typeof window === 'undefined') return false;
+    return window.innerWidth < 768 || navigator.maxTouchPoints > 0;
+  }, []);
+
+  const coreParticleCount = isTouchMobile ? 15 : 40;
+  const torusRadial = isTouchMobile ? 4 : 8;
+  const torusTubular = isTouchMobile ? 24 : 48;
+
+  // Static points around core
   const [particlePositions] = useMemo(() => {
-    const particleCount = 40;
-    const pos = new Float32Array(particleCount * 3);
-    for (let i = 0; i < particleCount; i++) {
+    const pos = new Float32Array(coreParticleCount * 3);
+    for (let i = 0; i < coreParticleCount; i++) {
       const u = Math.random();
       const v = Math.random();
       const theta = u * 2.0 * Math.PI;
@@ -295,7 +305,7 @@ const SkillsCore = ({ activeCategory = 'all' }) => {
       pos[i * 3 + 2] = r * Math.cos(phi);
     }
     return [pos];
-  }, []);
+  }, [coreParticleCount]);
 
   const skills = [
     // Languages
@@ -344,6 +354,7 @@ const SkillsCore = ({ activeCategory = 'all' }) => {
     : null;
 
   useFrame((state) => {
+    if (document.hidden) return;
     if (!isVisible.current) return;
     const elapsed = state.clock.getElapsedTime();
 
@@ -456,19 +467,19 @@ const SkillsCore = ({ activeCategory = 'all' }) => {
       {/* 2. Rotating Gyroscope energy rings */}
       <group ref={ringsRef1} rotation={[Math.PI / 4, 0, 0]}>
         <mesh>
-          <torusGeometry args={[0.65, 0.015, 8, 48]} />
+          <torusGeometry args={[0.65, 0.015, torusRadial, torusTubular]} />
           <meshBasicMaterial color="#00f0ff" transparent opacity={coreHovered ? 0.6 : 0.4} blending={THREE.AdditiveBlending} />
         </mesh>
       </group>
       <group ref={ringsRef2} rotation={[0, Math.PI / 4, 0]}>
         <mesh>
-          <torusGeometry args={[0.72, 0.012, 8, 48]} />
+          <torusGeometry args={[0.72, 0.012, torusRadial, torusTubular]} />
           <meshBasicMaterial color="#ff007f" transparent opacity={coreHovered ? 0.55 : 0.35} blending={THREE.AdditiveBlending} />
         </mesh>
       </group>
       <group ref={ringsRef3} rotation={[Math.PI / 2, 0, Math.PI / 4]}>
         <mesh>
-          <torusGeometry args={[0.8, 0.01, 8, 48]} />
+          <torusGeometry args={[0.8, 0.01, torusRadial, torusTubular]} />
           <meshBasicMaterial color="#fee715" transparent opacity={coreHovered ? 0.5 : 0.3} blending={THREE.AdditiveBlending} />
         </mesh>
       </group>

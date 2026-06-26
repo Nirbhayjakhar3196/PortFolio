@@ -1,9 +1,10 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Html } from '@react-three/drei';
+import { useReducedMotion } from 'framer-motion';
 import * as THREE from 'three';
 
-const HolographicMenuPanel = ({ label, index, targetId }) => {
+const HolographicMenuPanel = React.memo(({ label, index, targetId }) => {
   const handleScrollTo = () => {
     const el = document.getElementById(targetId);
     if (el) {
@@ -20,7 +21,7 @@ const HolographicMenuPanel = ({ label, index, targetId }) => {
       <span className="w-1.5 h-1.5 rounded-full bg-current animate-ping"></span>
     </button>
   );
-};
+});
 
 const RobotWorkstation = () => {
   const robotGroupRef = useRef();
@@ -28,11 +29,17 @@ const RobotWorkstation = () => {
   const torsoRef = useRef();
   const leftArmRef = useRef();
   const rightArmRef = useRef();
+  const prefersReducedMotion = useReducedMotion();
 
   // Simulated typing / tapping states
   useFrame((state) => {
+    // 1. Paused state optimizations: check if tab is inactive
+    if (document.hidden) return;
+
     // Viewport optimization: skip frame calculations when scrolled offscreen
     if (window.scrollY > window.innerHeight + 100) return;
+
+    if (prefersReducedMotion) return;
     
     const time = state.clock.getElapsedTime();
 
@@ -324,4 +331,4 @@ const RobotWorkstation = () => {
   );
 };
 
-export default RobotWorkstation;
+export default React.memo(RobotWorkstation);
