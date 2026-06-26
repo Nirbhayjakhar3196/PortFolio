@@ -233,7 +233,7 @@ const ProjectShowcase = () => {
   ];
 
   return (
-    <div id="projects" ref={containerRef} className="relative w-full h-[170vh] md:h-[180vh] bg-[#030308]">
+    <div id="projects" ref={containerRef} className="relative w-full h-[120vh] md:h-[120vh] bg-[#030308]">
       
       {/* Sticky viewport frame */}
       <div className="sticky top-0 w-full h-screen overflow-hidden flex flex-col justify-center">
