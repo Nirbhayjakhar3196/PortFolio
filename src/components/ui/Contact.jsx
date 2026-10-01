@@ -35,53 +35,42 @@ const Contact = () => {
     setIsSubmitting(true);
 
     try {
-      // If EmailJS credentials are provided in .env
-      if (serviceId && templateId && publicKey) {
-        const templateParams = {
-          from_name: formData.name,
-          from_email: formData.email,
-          reply_to: formData.email,
-          message: formData.message,
-          to_email: recipientEmail
-        };
-
-        const response = await emailjs.send(
-          serviceId,
-          templateId,
-          templateParams,
-          publicKey
+      // Check if EmailJS credentials are provided
+      if (!serviceId || !templateId || !publicKey) {
+        throw new Error(
+          'EmailJS credentials missing in .env. Please restart your dev server (npm run dev) after updating .env.'
         );
+      }
 
-        if (response.status === 200 || response.text === 'OK') {
-          setIsSuccess(true);
-          setFormData({ name: '', email: '', message: '' });
-        } else {
-          throw new Error('Email service returned non-200 status.');
-        }
-      } else {
-        // Fallback when EmailJS keys are not yet configured: Open default email client with prefilled details
-        const mailtoUrl = `mailto:${recipientEmail}?subject=${encodeURIComponent(
-          `Portfolio Inquiry from ${formData.name}`
-        )}&body=${encodeURIComponent(
-          `Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`
-        )}`;
-        
-        window.open(mailtoUrl, '_blank');
+      const templateParams = {
+        name: formData.name,
+        from_name: formData.name,
+        email: formData.email,
+        from_email: formData.email,
+        reply_to: formData.email,
+        message: formData.message,
+        to_name: 'Nirbhay Jakhar',
+        to_email: recipientEmail
+      };
+
+      const response = await emailjs.send(
+        serviceId,
+        templateId,
+        templateParams,
+        publicKey
+      );
+
+      if (response.status === 200 || response.text === 'OK') {
         setIsSuccess(true);
         setFormData({ name: '', email: '', message: '' });
+      } else {
+        throw new Error(`Email delivery failed (Status: ${response.status})`);
       }
     } catch (err) {
       console.error('EmailJS submission error:', err);
-      setErrorMessage(
-        'Direct delivery encountered an issue. Opening your email app instead...'
-      );
-      const mailtoUrl = `mailto:${recipientEmail}?subject=${encodeURIComponent(
-        `Portfolio Inquiry from ${formData.name}`
-      )}&body=${encodeURIComponent(
-        `Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`
-      )}`;
-      window.open(mailtoUrl, '_blank');
-      setIsSuccess(true);
+      const errMsg =
+        err?.text || err?.message || 'Failed to send message. Please try again or copy the email below.';
+      setErrorMessage(`Error: ${errMsg}`);
     } finally {
       setIsSubmitting(false);
     }
