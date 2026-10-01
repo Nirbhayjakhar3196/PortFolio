@@ -1,7 +1,7 @@
-import React, { Suspense, useEffect } from 'react';
+import React, { Suspense } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { motion, useReducedMotion } from 'framer-motion';
-import { Terminal, Download, ArrowRight, Shield } from 'lucide-react';
+import { ArrowRight, Shield, Github, Linkedin, Code2, Mail } from 'lucide-react';
 import { useLenis } from 'lenis/react';
 import * as THREE from 'three';
 import CyberParticles from '../canvas/CyberParticles';
@@ -140,7 +140,7 @@ const Hero = () => {
             className="inline-flex items-center space-x-1.5 px-3 py-1 bg-cyber-cyan/10 border border-cyber-cyan/30 rounded text-[10px] md:text-xs tracking-[0.25em] font-display text-cyber-cyan font-bold glow-text-cyan uppercase mb-6"
           >
             <Shield size={10} className="animate-pulse" />
-            <span>DEV_ENVIRONMENT_ACTIVE</span>
+            <span>SOFTWARE ENGINEERING INTERN // FULL-STACK & BACKEND</span>
           </motion.div>
 
           {/* Main Title */}
@@ -156,21 +156,21 @@ const Hero = () => {
             variants={itemVariants}
             className="text-xs md:text-sm tracking-[0.15em] font-display font-semibold text-cyber-yellow glow-text-yellow mb-6 uppercase"
           >
-            Full Stack Developer | Backend Enthusiast | Problem Solver
+            Full-Stack Developer • Backend Architect • AI Applications
           </motion.h2>
 
           {/* Description */}
           <motion.p 
             variants={itemVariants}
-            className="text-slate-400 text-sm md:text-base max-w-2xl mx-auto leading-relaxed mb-8 font-sans"
+            className="text-slate-300 text-sm md:text-base max-w-2xl mx-auto leading-relaxed mb-8 font-sans"
           >
-            Computer Science Engineering student passionate about building scalable web applications using React, Node.js, Express.js, and MongoDB.
+            Computer Science student specializing in full-stack development and AI applications. Hands-on experience building scalable web platforms, layered REST APIs, Redis-backed systems, and document-grounded RAG pipelines.
           </motion.p>
 
-          {/* CTA Buttons */}
+          {/* Primary & Secondary Action Buttons */}
           <motion.div 
             variants={itemVariants}
-            className="flex flex-col sm:flex-row items-center justify-center gap-4 font-display"
+            className="flex flex-col sm:flex-row items-center justify-center gap-3 font-display mb-6"
           >
             <button
               onClick={() => handleScrollTo('projects')}
@@ -180,50 +180,58 @@ const Hero = () => {
               <ArrowRight size={14} />
             </button>
 
-            <a
-              href="#contact"
-              onClick={(e) => {
-                e.preventDefault();
-                handleScrollTo('contact');
-              }}
+            <button
+              onClick={() => handleScrollTo('contact')}
               className="w-full sm:w-auto flex items-center justify-center space-x-2 px-6 py-3 bg-transparent text-white border border-slate-700 hover:border-cyber-magenta hover:text-cyber-magenta rounded text-xs tracking-widest font-bold transition-all duration-300 hover:shadow-[0_0_15px_rgba(255,0,127,0.3)] cursor-pointer"
             >
-              <Terminal size={14} />
-              <span>TERMINAL_CON</span>
+              <Mail size={14} />
+              <span>CONNECT_ME</span>
+            </button>
+          </motion.div>
+
+          {/* Direct Profile Links Strip */}
+          <motion.div
+            variants={itemVariants}
+            className="flex flex-wrap items-center justify-center gap-2 pt-2 border-t border-slate-800/80 font-mono text-[11px]"
+          >
+            <a
+              href="https://github.com/Nirbhayjakhar3196"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded bg-black/40 border border-slate-800 text-slate-300 hover:text-cyber-cyan hover:border-cyber-cyan transition-all"
+            >
+              <Github size={13} />
+              <span>GitHub</span>
             </a>
 
             <a
-              href="#"
-              onClick={(e) => {
-                e.preventDefault();
-                alert("Resume download triggered. (Demonstration Mode)");
-              }}
-              className="w-full sm:w-auto flex items-center justify-center space-x-2 px-6 py-3 bg-transparent text-slate-400 hover:text-white transition-colors text-xs tracking-widest font-semibold cursor-pointer"
+              href="https://www.linkedin.com/in/nirbhay-jakhar-0b52103b2/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded bg-black/40 border border-slate-800 text-slate-300 hover:text-cyber-cyan hover:border-cyber-cyan transition-all"
             >
-              <Download size={14} />
-              <span>GET_RESUME</span>
+              <Linkedin size={13} />
+              <span>LinkedIn</span>
+            </a>
+
+            <a
+              href="https://leetcode.com/u/Nirbhayjakhar000"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded bg-black/40 border border-slate-800 text-slate-300 hover:text-cyber-yellow hover:border-cyber-yellow transition-all"
+            >
+              <Code2 size={13} />
+              <span>LeetCode (210+)</span>
             </a>
           </motion.div>
         </motion.div>
       </div>
 
-      {/* Decorative Side HUD Lines */}
-      <div className="absolute left-6 bottom-10 hidden xl:flex flex-col space-y-2 font-mono text-[9px] text-slate-500">
-        <div>SYS_TEMP: 42.4°C</div>
-        <div>SYS_LATENCY: 0.08ms</div>
-        <div>GRID_STATUS: SYS_ONLINE</div>
-      </div>
-      <div className="absolute right-6 bottom-10 hidden xl:flex flex-col space-y-2 font-mono text-[9px] text-slate-500 text-right">
-        <div>COORDS: 28.6139° N, 77.2090° E</div>
-        <div>IP_ADDR: 192.168.1.101</div>
-        <div>CORE_RPM: 4200</div>
-      </div>
-      
       {/* Scroll indicator */}
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center pointer-events-none animate-bounce">
-        <span className="text-[9px] text-cyber-cyan font-display tracking-widest mb-1.5 opacity-60">SCROLL_DOWN</span>
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center pointer-events-none">
+        <span className="text-[10px] text-slate-400 font-display tracking-widest mb-1.5 opacity-75">SCROLL</span>
         <div className="w-4 h-7 border border-cyber-cyan/30 rounded-full flex justify-center p-1">
-          <div className="w-1.5 h-1.5 bg-cyber-cyan rounded-full animate-ping"></div>
+          <div className="w-1.5 h-1.5 bg-cyber-cyan rounded-full animate-bounce"></div>
         </div>
       </div>
     </section>

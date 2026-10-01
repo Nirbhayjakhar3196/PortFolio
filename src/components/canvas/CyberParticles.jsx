@@ -41,7 +41,6 @@ const CyberParticles = ({ count = 120 }) => {
     
     // Slow mouse influence
     const mouseX = state.pointer.x * 2;
-    const mouseY = state.pointer.y * 2;
 
     for (let i = 0; i < activeCount; i++) {
       let y = positionsAttr.getY(i);

@@ -69,58 +69,60 @@ const Achievements = () => {
 
   const achievementsData = [
     {
-      title: "LeetCode Solved",
-      value: "100",
+      title: "LeetCode DSA Solved",
+      value: "210",
       suffix: "+",
-      description: "Data Structures & Algorithms problem solving proficiency.",
+      description: "Active competitive programmer with 210+ Data Structures & Algorithms problems solved across arrays, trees, graphs, and dynamic programming.",
       icon: Code2,
       color: "border-cyber-cyan/20 text-cyber-cyan bg-cyber-cyan/5 hover:border-cyber-cyan/50",
-      glowColor: "rgba(0,240,255,0.1)"
+      glowColor: "rgba(0,240,255,0.1)",
+      link: "https://leetcode.com/u/Nirbhayjakhar000",
+      linkText: "View LeetCode Profile"
     },
     {
-      title: "Hackathon Endurance",
+      title: "SarvHit CodeSphere Hackathon",
       value: "36",
       suffix: "h",
-      description: "Collaborated, designed, and coded a working system in 36 hours.",
+      description: "Collaborated in a 36-hour technical hackathon in a 5-member engineering team, building functional full-stack software.",
       icon: Zap,
       color: "border-cyber-magenta/20 text-cyber-magenta bg-cyber-magenta/5 hover:border-cyber-magenta/50",
       glowColor: "rgba(255,0,127,0.1)"
     },
     {
-      title: "Academic Excellence",
+      title: "Academic CGPA",
       value: "9.6",
       suffix: "/10",
-      description: "Maintained a top-tier CGPA in Computer Science B.Tech curriculum.",
+      description: "Top-tier academic performance in Kalvium's UG Program in CS (Software Product Engineering) at SGT University.",
       icon: BarChart,
       color: "border-cyber-yellow/20 text-cyber-yellow bg-cyber-yellow/5 hover:border-cyber-yellow/50",
       glowColor: "rgba(254,231,21,0.1)"
     },
     {
-      title: "LeetCode consistency",
-      value: "50",
-      suffix: " Days",
-      description: "Awarded LeetCode active coder streak badge for system practice.",
-      icon: Award,
+      title: "Production Software Systems",
+      value: "3",
+      suffix: " Systems",
+      description: "Engineered full-stack platforms across Next.js/PostgreSQL, Redis Lua caching, and Gemini RAG pipelines.",
+      icon: Layers,
       color: "border-cyber-green/20 text-cyber-green bg-cyber-green/5 hover:border-cyber-green/50",
       glowColor: "rgba(57,255,20,0.1)"
     },
     {
-      title: "Python Dojo Belts",
-      value: "6",
-      suffix: " Belts",
-      description: "Achieved intermediate coding belts in platform dojos.",
-      icon: BookOpen,
+      title: "API Security & Rate Limiting",
+      value: "100",
+      suffix: "%",
+      description: "Implemented atomic token-bucket rate limiting via Redis Lua scripting and Redis-backed session auth caching.",
+      icon: Award,
       color: "border-cyber-cyan/20 text-cyber-cyan bg-cyber-cyan/5 hover:border-cyber-cyan/50",
       glowColor: "rgba(0,240,255,0.1)"
     },
     {
-      title: "Java Dojo Belts",
-      value: "4",
-      suffix: " Belts",
-      description: "Acquired Java core object-oriented structures belts.",
-      icon: Layers,
-      color: "border-cyber-magenta/20 text-cyber-magenta bg-cyber-magenta/5 hover:border-cyber-magenta/50",
-      glowColor: "rgba(255,0,127,0.1)"
+      title: "RAG & Vector Retrieval",
+      value: "300",
+      suffix: "w Chunks",
+      description: "Document-grounded RAG with 50-word chunk overlaps, cosine similarity search, and real-time Web Streams.",
+      icon: BookOpen,
+      color: "border-purple-400/20 text-purple-400 bg-purple-500/5 hover:border-purple-400/50",
+      glowColor: "rgba(168,85,247,0.1)"
     }
   ];
 
@@ -158,12 +160,8 @@ const Achievements = () => {
         
         {/* Section Header */}
         <div className="text-center mb-16">
-          <div className="inline-flex items-center space-x-2 px-3 py-1 bg-cyber-yellow/10 border border-cyber-yellow/30 rounded text-[10px] tracking-[0.25em] font-display text-cyber-yellow font-bold uppercase mb-4">
-            <span className="w-1.5 h-1.5 bg-cyber-yellow rounded-full animate-ping"></span>
-            <span>SEC_BIOSTAT_READOUT</span>
-          </div>
           <h2 className="text-3xl md:text-5xl font-black uppercase text-white tracking-widest">
-            BIOSTAT <span className="text-cyber-yellow glow-text-yellow">DASHBOARD</span>
+            ACHIEVEMENTS & <span className="text-cyber-yellow glow-text-yellow">METRICS</span>
           </h2>
           <div className="w-20 h-1 bg-gradient-to-r from-cyber-yellow to-transparent mx-auto mt-4"></div>
         </div>
@@ -187,28 +185,37 @@ const Achievements = () => {
                   '--glow-hover': stat.glowColor
                 }}
               >
-                {/* Tech corner accents */}
-                <div className="absolute top-0 right-0 w-2 h-2 border-t border-r border-current opacity-40"></div>
-                <div className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-current opacity-40"></div>
-
                 <div className="flex items-center justify-between mb-4">
                   <div className="p-2.5 border border-current/30 rounded bg-black/40">
                     <Icon size={20} className="animate-pulse-slow" />
                   </div>
-                  <span className="text-[8px] font-mono text-slate-500">STAT_NODE_{idx + 1}</span>
                 </div>
 
                 <div className="font-display text-3xl md:text-4xl font-black text-white mb-2 flex items-baseline tracking-wider">
                   <AnimatedCounter target={stat.value} suffix={stat.suffix} />
                 </div>
 
-                <div className="text-xs font-display font-bold tracking-widest text-slate-300 uppercase mb-2">
+                <div className="text-xs font-display font-bold tracking-widest text-slate-200 uppercase mb-2">
                   {stat.title}
                 </div>
 
-                <p className="text-xs text-slate-400 font-sans leading-relaxed">
+                <p className="text-xs text-slate-300 font-sans leading-relaxed mb-3">
                   {stat.description}
                 </p>
+
+                {stat.link && (
+                  <div className="pt-2 border-t border-slate-800/60">
+                    <a
+                      href={stat.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center space-x-1.5 text-xs font-mono font-bold text-cyber-cyan hover:underline"
+                    >
+                      <span>{stat.linkText || 'View Record'}</span>
+                      <span>&rarr;</span>
+                    </a>
+                  </div>
+                )}
               </motion.div>
             );
           })}

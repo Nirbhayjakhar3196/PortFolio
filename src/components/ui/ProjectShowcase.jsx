@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform, useMotionValue, useSpring, useReducedMotion } from 'framer-motion';
-import { Terminal, Github, ExternalLink, Cpu, X, Server, Layout, ShieldCheck } from 'lucide-react';
+import { Terminal, Github, ExternalLink, X, Server, ShieldCheck, Sparkles, ArrowRight, CheckCircle2, GitBranch } from 'lucide-react';
 
 // A single 3D interactive holographic monitor card
 const ProjectCard = ({ project, index, onSelect }) => {
@@ -14,8 +14,8 @@ const ProjectCard = ({ project, index, onSelect }) => {
 
   // Set up spring animations for smooth tilt and lift transitions
   const springConfig = { stiffness: 150, damping: 20 };
-  const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [12, -12]), springConfig);
-  const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-12, 12]), springConfig);
+  const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [10, -10]), springConfig);
+  const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-10, 10]), springConfig);
   const y = useSpring(yValue, springConfig);
   
   const handleMouseMove = (e) => {
@@ -42,27 +42,24 @@ const ProjectCard = ({ project, index, onSelect }) => {
   const borderColors = [
     'border-cyber-cyan/30 hover:border-cyber-cyan',
     'border-cyber-magenta/30 hover:border-cyber-magenta',
-    'border-cyber-yellow/30 hover:border-cyber-yellow',
-    'border-cyber-green/30 hover:border-cyber-green'
+    'border-purple-400/30 hover:border-purple-400'
   ];
 
   const glows = [
     'hover:shadow-[0_0_30px_rgba(0,240,255,0.25)]',
     'hover:shadow-[0_0_30px_rgba(255,0,127,0.25)]',
-    'hover:shadow-[0_0_30px_rgba(254,231,21,0.25)]',
-    'hover:shadow-[0_0_30px_rgba(57,255,20,0.25)]'
+    'hover:shadow-[0_0_30px_rgba(168,85,247,0.25)]'
   ];
 
   const tagColors = [
     'text-cyber-cyan bg-cyber-cyan/10 border-cyber-cyan/35',
     'text-cyber-magenta bg-cyber-magenta/10 border-cyber-magenta/35',
-    'text-cyber-yellow bg-cyber-yellow/10 border-cyber-yellow/35',
-    'text-cyber-green bg-cyber-green/10 border-cyber-green/35'
+    'text-purple-300 bg-purple-500/10 border-purple-500/35'
   ];
 
-  const activeGlow = borderColors[index % 4];
-  const cardGlow = glows[index % 4];
-  const tagColor = tagColors[index % 4];
+  const activeGlow = borderColors[index % 3];
+  const cardGlow = glows[index % 3];
+  const tagColor = tagColors[index % 3];
 
   return (
     <motion.div
@@ -77,38 +74,62 @@ const ProjectCard = ({ project, index, onSelect }) => {
         transformStyle: 'preserve-3d',
         perspective: 1000
       }}
-      className={`w-[290px] sm:w-[350px] h-[400px] flex-shrink-0 glass-panel p-6 rounded-xl border ${activeGlow} ${cardGlow} transition-all duration-300 relative cursor-pointer flex flex-col justify-between select-none scanlines`}
+      className={`w-[320px] sm:w-[380px] h-[450px] flex-shrink-0 glass-panel p-6 rounded-xl border ${activeGlow} ${cardGlow} transition-all duration-300 relative cursor-pointer flex flex-col justify-between select-none scanlines group`}
     >
-      <div className="absolute inset-0 scanline-overlay"></div>
+      <div className="absolute inset-0 scanline-overlay pointer-events-none"></div>
       
       {/* 3D Depth Elements */}
       <div 
-        style={{ transform: prefersReducedMotion ? 'none' : 'translateZ(30px)' }}
+        style={{ transform: prefersReducedMotion ? 'none' : 'translateZ(25px)' }}
         className="w-full"
       >
         {/* Card HUD Head */}
-        <div className="flex justify-between items-center border-b border-slate-800 pb-3 mb-4">
-          <div className="flex items-center space-x-1.5 font-mono text-[9px] text-slate-500">
-            <Terminal size={10} className="text-current" />
-            <span>PROJECT_0{index + 1}.SYS</span>
+        <div className="flex justify-between items-center border-b border-slate-800 pb-3 mb-3">
+          <div className="flex items-center space-x-1.5 font-mono text-[10px] text-slate-300 font-semibold">
+            <span className="text-cyber-yellow">{project.date}</span>
           </div>
-          <span className="w-1.5 h-1.5 rounded-full bg-cyber-cyan animate-pulse"></span>
+          {project.live ? (
+            <span className="px-2 py-0.5 rounded bg-cyber-green/10 border border-cyber-green/40 text-cyber-green text-[9px] font-bold font-mono animate-pulse">
+              LIVE DEMO
+            </span>
+          ) : (
+            <span className="px-2 py-0.5 rounded bg-cyber-cyan/10 border border-cyber-cyan/30 text-cyber-cyan text-[9px] font-mono font-bold">
+              OPEN SOURCE
+            </span>
+          )}
         </div>
 
-        {/* Project Type Icon */}
-        <div className="mb-4">
-          <div className={`w-10 h-10 border border-slate-800 rounded-lg bg-black/40 flex items-center justify-center text-slate-300`}>
-            {project.type === 'backend' ? <Server size={18} /> : project.type === 'auth' ? <ShieldCheck size={18} /> : <Layout size={18} />}
+        {/* Project Header & Category Icon */}
+        <div className="flex items-center space-x-3 mb-3">
+          <div className="w-10 h-10 border border-slate-800 rounded-lg bg-black/60 flex items-center justify-center text-slate-200 shrink-0">
+            {project.type === 'backend' ? (
+              <Server size={18} className="text-cyber-cyan" />
+            ) : project.type === 'system' ? (
+              <ShieldCheck size={18} className="text-cyber-magenta" />
+            ) : (
+              <Sparkles size={18} className="text-purple-400" />
+            )}
+          </div>
+          <div>
+            <h3 className="text-base sm:text-lg font-display font-black tracking-wider text-white uppercase group-hover:text-cyber-cyan transition-colors line-clamp-1">
+              {project.title}
+            </h3>
+            <span className="text-[10px] font-mono text-slate-400 uppercase tracking-widest block">
+              {project.categoryLabel}
+            </span>
           </div>
         </div>
-
-        <h3 className="text-lg font-display font-black tracking-wider text-white uppercase mb-2">
-          {project.title}
-        </h3>
         
-        <p className="text-xs text-slate-400 font-sans leading-relaxed mb-4 h-[72px] overflow-hidden line-clamp-3">
-          {project.description}
+        {/* Problem Statement / Description */}
+        <p className="text-xs text-slate-300 font-sans leading-relaxed mb-4 line-clamp-3">
+          {project.problem}
         </p>
+
+        {/* Architectural Highlight Snippet */}
+        <div className="p-2.5 rounded bg-black/50 border border-slate-800/80 mb-4 text-[11px] font-mono text-slate-400">
+          <span className="text-cyber-cyan font-bold">Highlight: </span>
+          <span className="text-slate-300">{project.architectureHighlight}</span>
+        </div>
       </div>
 
       <div 
@@ -116,8 +137,8 @@ const ProjectCard = ({ project, index, onSelect }) => {
         className="w-full mt-auto"
       >
         {/* Tech Stack Chips */}
-        <div className="flex flex-wrap gap-1.5 mb-4">
-          {project.tech.slice(0, 3).map((t, idx) => (
+        <div className="flex flex-wrap gap-1.5 mb-3.5">
+          {project.tech.slice(0, 4).map((t, idx) => (
             <span 
               key={idx} 
               className={`px-2 py-0.5 border text-[9px] font-mono tracking-wider font-semibold rounded ${tagColor}`}
@@ -125,15 +146,62 @@ const ProjectCard = ({ project, index, onSelect }) => {
               {t}
             </span>
           ))}
-          {project.tech.length > 3 && (
-            <span className="px-2 py-0.5 border border-slate-800 text-slate-500 text-[9px] font-mono rounded">
-              +{project.tech.length - 3}
+          {project.tech.length > 4 && (
+            <span className="px-2 py-0.5 border border-slate-800 text-slate-400 text-[9px] font-mono rounded">
+              +{project.tech.length - 4}
             </span>
           )}
         </div>
 
-        <div className="text-[10px] font-mono text-cyber-cyan hover:underline mt-2 flex items-center space-x-1 select-none">
-          <span>RUN_INSPECT_MODE()</span>
+        {/* Card Footer CTAs with direct links */}
+        <div className="pt-3 border-t border-slate-800/80 flex flex-col gap-2">
+          <div className="flex items-center gap-2">
+            <a
+              href={project.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              className="flex-1 flex items-center justify-center space-x-1.5 py-1.5 px-2.5 rounded bg-slate-900 border border-cyber-cyan/40 text-cyber-cyan hover:bg-cyber-cyan hover:text-black transition-all text-[11px] font-mono font-bold tracking-wide"
+              title="Open GitHub Repository"
+            >
+              <Github size={13} />
+              <span>GitHub Repo</span>
+            </a>
+
+            {project.live ? (
+              <a
+                href={project.live}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+                className="flex-1 flex items-center justify-center space-x-1.5 py-1.5 px-2.5 rounded bg-cyber-magenta/10 border border-cyber-magenta/60 text-cyber-magenta hover:bg-cyber-magenta hover:text-white transition-all text-[11px] font-mono font-bold tracking-wide shadow-[0_0_10px_rgba(255,0,127,0.25)]"
+                title="Open Live Production Demo"
+              >
+                <ExternalLink size={13} />
+                <span>Live Demo</span>
+              </a>
+            ) : (
+              <button
+                type="button"
+                onClick={() => onSelect(project)}
+                className="flex-1 flex items-center justify-center space-x-1 py-1.5 px-2 rounded bg-black/40 border border-slate-700 text-slate-300 hover:text-white hover:border-slate-500 transition-all text-[11px] font-mono font-medium"
+              >
+                <span>Architecture</span>
+                <ArrowRight size={11} />
+              </button>
+            )}
+          </div>
+          
+          {project.live && (
+            <button
+              type="button"
+              onClick={() => onSelect(project)}
+              className="text-[10px] font-mono text-slate-400 hover:text-cyber-cyan flex items-center justify-center space-x-1 transition-colors pt-0.5"
+            >
+              <span>Click card for detailed architecture specs</span>
+              <ArrowRight size={10} />
+            </button>
+          )}
         </div>
       </div>
     </motion.div>
@@ -144,21 +212,21 @@ const ProjectShowcase = () => {
   const containerRef = useRef(null);
   const [selectedProject, setSelectedProject] = useState(null);
   const prefersReducedMotion = useReducedMotion();
-  const [translationLimit, setTranslationLimit] = useState("-55%");
+  const [translationLimit, setTranslationLimit] = useState("-30%");
 
   useEffect(() => {
     const handleResize = () => {
       const w = window.innerWidth;
       if (w >= 1440) {
-        setTranslationLimit("-12%");
+        setTranslationLimit("-10%");
       } else if (w >= 1200) {
-        setTranslationLimit("-22%");
+        setTranslationLimit("-18%");
       } else if (w >= 1024) {
-        setTranslationLimit("-32%");
+        setTranslationLimit("-25%");
       } else if (w >= 768) {
-        setTranslationLimit("-45%");
+        setTranslationLimit("-38%");
       } else {
-        setTranslationLimit("-65%");
+        setTranslationLimit("-55%");
       }
     };
     handleResize();
@@ -166,79 +234,105 @@ const ProjectShowcase = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  // Close modal on Escape key
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setSelectedProject(null);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
   // Scroll tracking to map vertical scroll to horizontal transformation
   const { scrollYProgress } = useScroll({
     target: containerRef
   });
 
-  // Scale scroll percentage to move horizontal container dynamically based on display size
   const xTranslation = useTransform(scrollYProgress, [0, 1], ["0%", translationLimit]);
 
   const projects = [
     {
-      title: "Authentication System",
-      type: "auth",
-      description: "A secure industry-grade user access authentication and authorization database system built with Node and MongoDB.",
-      extendedDesc: "A complete backend solution managing secure token-based user sessions, password encryptions, and route protections. Implements secure access keys and session storage following modern security benchmarks.",
-      tech: ["Node.js", "Express.js", "MongoDB", "JWT", "Bcrypt"],
+      title: "BOAT Warranty Hub",
+      date: "Jul 2026 – Aug 2026",
+      type: "backend",
+      categoryLabel: "Full-Stack & Layered Backend Platform",
+      problem: "Enables users to register products, verify warranty status using unique serial numbers, track purchase and expiry dates, and maintain repair records through a centralized platform.",
+      architectureHighlight: "Layered API, Service & Repository architecture with PostgreSQL & Docker.",
+      extendedDesc: "A robust full-stack warranty management platform designed with modular separation between controllers, business logic service layers, and Prisma repository operations. Features serial-number based warranty lookup, automatic expiry calculation, and repair-history tracking.",
+      tech: ["Next.js", "PostgreSQL", "Prisma", "JWT", "bcrypt", "Zod", "Docker"],
       features: [
-        "Secure cookie-based and header JWT verification.",
-        "Automatic password hashing via Bcrypt salt algorithms.",
-        "Protected resource routing for secure user environments.",
-        "Mongoose db integration and schema design optimization."
+        "Product Registration: Secure onboarding with serial-number uniqueness checks and purchase logging.",
+        "Warranty Lookup Engine: Serial-number based query verification for instant warranty validity & expiry tracking.",
+        "Repair History Management: Centralized audit records of past service and maintenance requests.",
+        "Layered Architecture: Clean separation of API routes, business logic services, and database repository layers.",
+        "Validation & Security: Strict request payload validation via Zod schemas and password encryption with bcrypt.",
+        "Search, Pagination & Sorting: Optimized server-side database querying for record catalogs.",
+        "Containerized Deployment: Reproducible environment setup using Docker and PostgreSQL."
       ],
-      github: "https://github.com",
-      live: "https://github.com"
+      engineeringHighlights: [
+        { label: "Backend Pattern", value: "Layered Controller-Service-Repository" },
+        { label: "Data Integrity", value: "Zod Schema Validation & Prisma Type Safety" },
+        { label: "Containerization", value: "Dockerized PostgreSQL & Application" }
+      ],
+      github: "https://github.com/Nirbhayjakhar3196/boat-warranty",
+      live: null
     },
     {
-      title: "Holographic Note App",
-      type: "frontend",
-      description: "A clean, component-focused markdown note compiler allowing users to structure quick records.",
-      extendedDesc: "Created to practices modular component structures and component status updates in React. Includes rich text notes, quick tags, and search index filtering.",
-      tech: ["React.js", "JavaScript", "HTML5", "CSS3"],
+      title: "URL Shortener",
+      date: "Sep 2026",
+      type: "system",
+      categoryLabel: "High-Performance Distributed & Caching System",
+      problem: "Provides users with short, shareable URLs while maintaining ownership controls, secure authentication, and real-time usage analytics for created links.",
+      architectureHighlight: "Redis token-bucket rate limiter with atomic Lua scripting & auth caching.",
+      extendedDesc: "A high-performance full-stack URL shortening platform engineered for low-latency redirection and resilient API security. Leverages Redis Lua scripting for atomic token-bucket rate limiting and session state caching.",
+      tech: ["React", "Node.js", "Express", "MongoDB", "Mongoose", "NanoID", "JWT", "bcrypt", "Zod", "Redis", "Docker", "Docker Compose"],
       features: [
-        "Create, read, update, and delete note records.",
-        "Responsive grid alignment scaling.",
-        "Search filtering by custom keywords.",
-        "Local browser persistence modules."
+        "Token-Bucket Rate Limiter: Custom Redis Lua scripting executing atomic token consumption to prevent API abuse.",
+        "Redis Auth State: Cached session state and fast user verification reducing database read load.",
+        "Ownership Controls & Analytics: Authenticated link ownership, total click counting, and last-click tracking.",
+        "Authentication Suite: Google OAuth integration, protected REST endpoints, and OTP-based password recovery.",
+        "High-Speed Redirection: NanoID slug generation with fast key lookup and HTTP 302 redirection.",
+        "Multi-Container Architecture: Orchestrated with Docker & Docker Compose for service isolation."
       ],
-      github: "https://github.com",
-      live: "https://github.com"
+      engineeringHighlights: [
+        { label: "Rate Limiting", value: "Redis Token-Bucket via Atomic Lua Scripts" },
+        { label: "Auth Infrastructure", value: "Google OAuth, JWT & OTP Password Recovery" },
+        { label: "Orchestration", value: "Multi-service Docker Compose Pipeline" }
+      ],
+      github: "https://github.com/Nirbhayjakhar3196/url-shortner",
+      live: "https://url-shortner-ekul.vercel.app/"
     },
     {
-      title: "Password Generator",
-      type: "frontend",
-      description: "An interactive cyber-utility generating cryptographically secure combinations in real-time.",
-      extendedDesc: "A custom UI dashboard tool built to demonstrate clean state reactivity and accessibility in Tailwind. Features length controls, character toggle blocks, and clipboard copies.",
-      tech: ["React.js", "Tailwind CSS", "JavaScript"],
+      title: "AI Study Assistant",
+      date: "Aug 2026",
+      type: "ai",
+      categoryLabel: "Document-Grounded RAG & GenAI Pipeline",
+      problem: "Enables students to query their own study material and receive responses grounded strictly in relevant sections of uploaded documents rather than relying only on general model knowledge.",
+      architectureHighlight: "Full RAG pipeline with 300-word overlapping chunks, cosine similarity & Web Streams.",
+      extendedDesc: "An AI-powered academic assistant implementing a full Retrieval-Augmented Generation (RAG) pipeline. Extracts and chunks PDF text, generates vector embeddings, retrieves top-3 relevant context chunks using cosine similarity, and streams Gemini 2.5 Flash responses.",
+      tech: ["Next.js", "React", "Gemini 2.5 Flash", "PDF Parsing", "Embeddings", "Vector Storage", "Cosine Similarity", "Web Streams API"],
       features: [
-        "Custom password length (8-32 characters) configurations.",
-        "Regex filters for Numbers, Symbols, and Mixed characters.",
-        "One-click direct clipboard copies.",
-        "Fully accessible dark UI responsive interfaces."
+        "PDF Text Extraction & Cleaning: Automated parsing of raw document files into clean structured text.",
+        "Overlapping Chunking: 300-word text windows with 50-word overlaps to preserve semantic continuity across chunk boundaries.",
+        "Vector Embeddings: High-dimensional semantic vector representations for document chunks and user queries.",
+        "Cosine-Similarity Search: Top-3 most relevant context retrieval via mathematical cosine similarity scores.",
+        "Prompt Augmentation: Context-grounded prompt construction preventing hallucination.",
+        "Real-Time Streaming: Instant token-by-token response rendering using the Web Streams API."
       ],
-      github: "https://github.com",
-      live: "https://github.com"
-    },
-    {
-      title: "Random User Generator",
-      type: "frontend",
-      description: "A dynamic developer tool calling external REST APIs to fetch and render synthetic profiles.",
-      extendedDesc: "Designed to explore asynchronous fetch methods, error states, and skeleton UI loading architectures. Displays user avatars, contact cards, and locations.",
-      tech: ["React.js", "REST API", "JavaScript", "CSS3"],
-      features: [
-        "Asynchronous JSON fetching from third-party APIs.",
-        "Skeleton loader indicators for network latency.",
-        "Multi-profile dashboard card arrangements.",
-        "Location mapping coordinates parse logs."
+      engineeringHighlights: [
+        { label: "RAG Pipeline", value: "PDF → Text Extraction → 300-word Chunks (50 overlap) → Embeddings → Top-3 Retrieval" },
+        { label: "Model & Streaming", value: "Gemini 2.5 Flash with Web Streams API" },
+        { label: "Context Grounding", value: "Cosine Similarity Vector Matching" }
       ],
-      github: "https://github.com",
-      live: "https://github.com"
+      github: "https://github.com/Nirbhayjakhar3196/ai-study-assistance",
+      live: null
     }
   ];
 
   return (
-    <div id="projects" ref={containerRef} className="relative w-full h-[120vh] md:h-[120vh] bg-[#030308]">
+    <div id="projects" ref={containerRef} className="relative w-full h-[125vh] md:h-[125vh] bg-[#030308]">
       
       {/* Sticky viewport frame */}
       <div className="sticky top-0 w-full h-screen overflow-hidden flex flex-col justify-center">
@@ -248,23 +342,19 @@ const ProjectShowcase = () => {
 
         <div className="max-w-7xl mx-auto px-6 w-full relative z-10 select-none">
           {/* Header */}
-          <div className="mb-12">
-            <div className="inline-flex items-center space-x-2 px-3 py-1 bg-cyber-cyan/10 border border-cyber-cyan/30 rounded text-[10px] tracking-[0.25em] font-display text-cyber-cyan font-bold uppercase mb-4">
-              <span className="w-1.5 h-1.5 bg-cyber-cyan rounded-full animate-pulse"></span>
-              <span>SEC_PROJECT_ARCHIVE</span>
-            </div>
+          <div className="mb-8">
             <h2 className="text-3xl md:text-5xl font-black uppercase text-white tracking-widest leading-none">
-              PROJECTS <span className="text-cyber-cyan glow-text-cyan">SHOWCASE</span>
+              FEATURED <span className="text-cyber-cyan glow-text-cyan">PROJECTS</span>
             </h2>
             <div className="w-20 h-1 bg-gradient-to-r from-cyber-cyan to-transparent mt-4"></div>
           </div>
         </div>
 
         {/* Cinematic Horizontal Scroll Strip */}
-        <div className="relative w-full overflow-hidden mt-4">
+        <div className="relative w-full overflow-hidden mt-2">
           <motion.div
             style={{ x: prefersReducedMotion ? 0 : xTranslation }}
-            className="flex space-x-6 px-6 md:px-24 w-max pointer-events-auto"
+            className="flex space-x-6 px-6 md:px-24 w-max pointer-events-auto items-center"
           >
             {projects.map((project, idx) => (
               <ProjectCard
@@ -276,112 +366,186 @@ const ProjectShowcase = () => {
             ))}
 
             {/* End Card CTA */}
-            <div className="w-[200px] flex-shrink-0 flex flex-col justify-center items-center text-center p-6 rounded-xl border border-dashed border-slate-800 bg-slate-900/10">
-              <span className="text-xs text-slate-500 font-mono mb-2">END_OF_ARRAY</span>
-              <h4 className="text-xs font-display font-black text-slate-400 uppercase tracking-widest">
-                More projects on GitHub
+            <div className="w-[240px] h-[450px] flex-shrink-0 flex flex-col justify-center items-center text-center p-6 rounded-xl border border-dashed border-slate-800 bg-slate-900/20 glass-panel">
+              <div className="p-3 rounded-full bg-cyber-cyan/10 border border-cyber-cyan/30 text-cyber-cyan mb-3">
+                <GitBranch size={20} />
+              </div>
+              <span className="text-xs text-cyber-cyan font-mono mb-2 font-bold">ALL REPOSITORIES</span>
+              <h4 className="text-xs font-display font-black text-slate-300 uppercase tracking-widest mb-4">
+                Explore More on GitHub
               </h4>
+              <a
+                href="https://github.com/Nirbhayjakhar3196"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-4 py-2 bg-cyber-cyan text-black rounded text-[11px] font-mono font-bold tracking-wider hover:bg-white transition-all flex items-center space-x-1.5 cursor-pointer"
+              >
+                <Github size={13} />
+                <span>GitHub Profile</span>
+              </a>
             </div>
           </motion.div>
         </div>
 
-        {/* Floating Indicator */}
-        <div className="absolute bottom-12 right-12 z-20 text-[9px] font-mono text-slate-500 flex items-center space-x-2">
-          <span className="w-2 h-2 rounded-full bg-cyber-cyan animate-pulse"></span>
-          <span>TRACKER_POS: {prefersReducedMotion ? 'STATIC' : 'HORIZONTAL_STREAM'}</span>
-        </div>
-
       </div>
 
-      {/* Modal Detailed View overlay */}
+      {/* Modal Detailed Architectural View overlay */}
       {selectedProject && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
+        <div 
+          onClick={() => setSelectedProject(null)}
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md overflow-y-auto cursor-pointer"
+        >
           <motion.div 
+            onClick={(e) => e.stopPropagation()}
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
-            className="w-full max-w-xl bg-[#0c0c17] border border-cyber-cyan p-6 md:p-8 rounded-xl relative shadow-[0_0_50px_rgba(0,240,255,0.3)] scanlines"
+            className="w-full max-w-2xl bg-[#0c0c17] border border-cyber-cyan/50 p-6 md:p-8 rounded-xl relative shadow-[0_0_60px_rgba(0,240,255,0.25)] scanlines max-h-[90vh] overflow-y-auto cursor-default"
           >
-            <div className="absolute inset-0 scanline-overlay"></div>
-            
-            {/* Corner Tech Highlights */}
-            <div className="absolute top-0 left-0 w-4.5 h-4.5 border-t-2 border-l-2 border-cyber-cyan"></div>
-            <div className="absolute top-0 right-0 w-4.5 h-4.5 border-t-2 border-r-2 border-cyber-cyan"></div>
-            <div className="absolute bottom-0 left-0 w-4.5 h-4.5 border-b-2 border-l-2 border-cyber-cyan"></div>
-            <div className="absolute bottom-0 right-0 w-4.5 h-4.5 border-b-2 border-r-2 border-cyber-cyan"></div>
+            <div className="absolute inset-0 scanline-overlay pointer-events-none"></div>
 
             {/* Close Button */}
             <button
               onClick={() => setSelectedProject(null)}
-              className="absolute top-4 right-4 p-1 rounded-full border border-slate-800 text-slate-400 hover:text-cyber-cyan hover:border-cyber-cyan transition-colors cursor-pointer"
+              className="absolute top-4 right-4 p-1.5 rounded-full border border-slate-700 bg-black/60 text-slate-300 hover:text-cyber-cyan hover:border-cyber-cyan transition-colors cursor-pointer z-20"
+              title="Close (or click anywhere outside)"
             >
-              <X size={16} />
+              <X size={18} />
             </button>
 
             {/* Header */}
-            <div className="border-b border-slate-800 pb-4 mb-6">
-              <span className="text-[9px] font-mono text-cyber-cyan tracking-widest font-bold block mb-1">
-                SYSTEM_RECORD // DETAIL_VIEW
-              </span>
+            <div className="border-b border-slate-800 pb-5 mb-6">
+              <div className="flex items-center space-x-2 text-[11px] font-mono text-cyber-cyan tracking-wider font-semibold mb-1">
+                <span>{selectedProject.date}</span>
+                {selectedProject.live && (
+                  <span className="px-2 py-0.5 rounded bg-cyber-green/10 border border-cyber-green/40 text-cyber-green text-[9px] font-bold animate-pulse">
+                    LIVE DEMO AVAILABLE
+                  </span>
+                )}
+              </div>
               <h3 className="text-xl md:text-2xl font-display font-black text-white uppercase tracking-wider">
                 {selectedProject.title}
               </h3>
+              <p className="text-xs text-cyber-yellow font-mono mt-1 mb-4">
+                {selectedProject.categoryLabel}
+              </p>
+
+              {/* Quick Action Link Badges at top of modal */}
+              <div className="flex flex-wrap items-center gap-2.5 pt-2">
+                <a
+                  href={selectedProject.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center space-x-2 px-3 py-1.5 rounded-md bg-slate-900 border border-cyber-cyan/50 text-cyber-cyan hover:bg-cyber-cyan hover:text-black transition-all text-xs font-mono font-bold tracking-wide"
+                >
+                  <Github size={14} />
+                  <span>Repo: {selectedProject.github.replace('https://github.com/', '')}</span>
+                  <ExternalLink size={11} />
+                </a>
+
+                {selectedProject.live && (
+                  <a
+                    href={selectedProject.live}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center space-x-2 px-3 py-1.5 rounded-md bg-cyber-magenta/15 border border-cyber-magenta text-white hover:bg-cyber-magenta hover:text-white transition-all text-xs font-mono font-bold tracking-wide shadow-[0_0_12px_rgba(255,0,127,0.3)]"
+                  >
+                    <ExternalLink size={14} className="text-cyber-magenta" />
+                    <span>Live Demo Link</span>
+                    <ExternalLink size={11} />
+                  </a>
+                )}
+              </div>
             </div>
 
-            {/* Description */}
-            <div className="space-y-4 mb-6">
-              <p className="text-xs md:text-sm text-slate-300 font-sans leading-relaxed">
-                {selectedProject.extendedDesc}
-              </p>
+            {/* Body */}
+            <div className="space-y-6 mb-8 text-slate-300 font-sans">
               
+              {/* Problem / Overview */}
               <div>
-                <h4 className="text-xs font-display font-bold text-cyber-yellow tracking-widest uppercase mb-2.5">
-                  SYSTEM_SPECIFICATIONS:
+                <h4 className="text-xs font-display font-bold text-white tracking-wider uppercase mb-2 flex items-center space-x-1.5">
+                  <span className="w-1.5 h-1.5 bg-cyber-cyan rounded-full"></span>
+                  <span>Problem & Use Case:</span>
                 </h4>
-                <ul className="space-y-2 text-xs text-slate-400 font-sans">
+                <p className="text-xs md:text-sm text-slate-300 leading-relaxed bg-black/40 p-3.5 rounded border border-slate-800/80">
+                  {selectedProject.problem}
+                </p>
+              </div>
+
+              {/* Engineering Highlights Table / Cards */}
+              <div>
+                <h4 className="text-xs font-display font-bold text-cyber-cyan tracking-wider uppercase mb-2.5 flex items-center space-x-1.5">
+                  <span className="w-1.5 h-1.5 bg-cyber-cyan rounded-full"></span>
+                  <span>Engineering Highlights & Architecture:</span>
+                </h4>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                  {selectedProject.engineeringHighlights.map((hl, hIdx) => (
+                    <div key={hIdx} className="p-3 rounded bg-slate-900/60 border border-slate-800">
+                      <div className="text-[10px] font-mono text-slate-400 uppercase">{hl.label}</div>
+                      <div className="text-xs font-mono font-bold text-white mt-0.5">{hl.value}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* System Specifications / Implementation Points */}
+              <div>
+                <h4 className="text-xs font-display font-bold text-cyber-yellow tracking-wider uppercase mb-2.5 flex items-center space-x-1.5">
+                  <span className="w-1.5 h-1.5 bg-cyber-yellow rounded-full"></span>
+                  <span>Key Implementation Specifications:</span>
+                </h4>
+                <ul className="space-y-2 text-xs text-slate-300 font-sans">
                   {selectedProject.features.map((feat, idx) => (
                     <li key={idx} className="flex items-start">
-                      <span className="text-cyber-cyan font-mono mr-2 shrink-0">&gt;</span>
+                      <CheckCircle2 size={13} className="text-cyber-cyan mr-2 shrink-0 mt-0.5" />
                       <span>{feat}</span>
                     </li>
                   ))}
                 </ul>
               </div>
-            </div>
 
-            {/* Tech chips */}
-            <div className="flex flex-wrap gap-1.5 mb-8">
-              {selectedProject.tech.map((t, idx) => (
-                <span 
-                  key={idx} 
-                  className="px-2.5 py-1 border border-cyber-cyan/35 text-cyber-cyan bg-cyber-cyan/5 text-[10px] font-mono tracking-wider font-semibold rounded"
-                >
-                  {t}
-                </span>
-              ))}
+              {/* Tech Stack Badges */}
+              <div>
+                <h4 className="text-xs font-display font-bold text-slate-400 tracking-wider uppercase mb-2">
+                  Technologies & Frameworks:
+                </h4>
+                <div className="flex flex-wrap gap-1.5">
+                  {selectedProject.tech.map((t, idx) => (
+                    <span 
+                      key={idx} 
+                      className="px-2.5 py-1 border border-cyber-cyan/35 text-cyber-cyan bg-cyber-cyan/5 text-[10px] font-mono tracking-wider font-semibold rounded"
+                    >
+                      {t}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
             </div>
 
             {/* CTA Buttons */}
-            <div className="flex space-x-4 font-display">
+            <div className="flex flex-col sm:flex-row gap-3 font-display pt-5 border-t border-slate-800">
               <a
                 href={selectedProject.github}
                 target="_blank"
-                rel="noreferrer"
-                className="flex-1 flex items-center justify-center space-x-2 px-4 py-2.5 bg-cyber-cyan text-black hover:bg-black hover:text-cyber-cyan border border-cyber-cyan rounded text-xs tracking-widest font-black transition-all cursor-pointer"
+                rel="noopener noreferrer"
+                className="flex-1 flex items-center justify-center space-x-2 px-5 py-3.5 bg-cyber-cyan text-black hover:bg-white border border-cyber-cyan rounded-lg text-xs tracking-wider font-black transition-all cursor-pointer shadow-[0_0_20px_rgba(0,240,255,0.3)]"
               >
-                <Github size={14} />
-                <span>GITHUB_SRC</span>
+                <Github size={16} />
+                <span>View GitHub Repository</span>
               </a>
               
-              <a
-                href={selectedProject.live}
-                target="_blank"
-                rel="noreferrer"
-                className="flex-1 flex items-center justify-center space-x-2 px-4 py-2.5 border border-slate-700 text-white hover:border-cyber-magenta hover:text-cyber-magenta rounded text-xs tracking-widest font-bold transition-all cursor-pointer"
-              >
-                <ExternalLink size={14} />
-                <span>LIVE_DEPLOY</span>
-              </a>
+              {selectedProject.live && (
+                <a
+                  href={selectedProject.live}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 flex items-center justify-center space-x-2 px-5 py-3.5 bg-cyber-magenta/20 border-2 border-cyber-magenta text-white hover:bg-cyber-magenta hover:text-white rounded-lg text-xs tracking-wider font-black transition-all cursor-pointer shadow-[0_0_25px_rgba(255,0,127,0.4)]"
+                >
+                  <ExternalLink size={16} />
+                  <span>Open Live Demo</span>
+                </a>
+              )}
             </div>
 
           </motion.div>
@@ -393,3 +557,4 @@ const ProjectShowcase = () => {
 };
 
 export default ProjectShowcase;
+

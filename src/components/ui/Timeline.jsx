@@ -77,32 +77,38 @@ const Timeline = () => {
   const milestones = [
     {
       year: '2025',
-      title: 'B.Tech CSE Matriculation',
-      desc: 'Started Computer Science Engineering at SGT University, establishing core theoretical knowledge in programming and database structures.',
+      title: "Kalvium's UG Program in CS (Software Product Engineering)",
+      desc: "Matriculated at SGT University (Gurugram campus) with a focus on Software Product Engineering, establishing rigorous foundations in Data Structures, Algorithms, and system development.",
       icon: Calendar,
     },
     {
-      year: '2025',
-      title: 'Began Full Stack Development',
-      desc: 'Delved into JavaScript ecosystems. Built foundational front-end interfaces and integrated Node.js backend services.',
+      year: '2025 – 2026',
+      title: 'Full-Stack & REST API Foundations',
+      desc: 'Mastered modern JavaScript and Node.js ecosystems, engineering secure REST APIs, database schemas, and responsive client-side interfaces.',
       icon: Code,
     },
     {
-      year: '2026',
-      title: 'Built Authentication Systems',
-      desc: 'Engineered secure auth services using Express.js, MongoDB, JWT sessions, and Bcrypt encryption. Created note apps and generator suites.',
+      year: 'JUL – AUG 2026',
+      title: 'BOAT Warranty Hub Platform',
+      desc: 'Engineered a full-stack warranty tracking and lookup system using Next.js, PostgreSQL, Prisma ORM, JWT authentication, Zod validation, and Docker containerization with layered API architecture.',
       icon: ShieldCheck,
     },
     {
-      year: '2026',
-      title: '36-Hour Hackathon Endurance',
-      desc: 'Participated in a high-intensity hackathon, collaborating on rapidly prototyping functional full-stack software products under tight constraints.',
+      year: 'AUG 2026',
+      title: 'AI Study Assistant & 36-Hour Hackathon',
+      desc: 'Built a document-grounded RAG assistant with Gemini 2.5 Flash, PDF parsing, vector embeddings, and Web Streams. Participated in the 36-hour SarvHit CodeSphere Hackathon in a 5-member technical team.',
       icon: Cpu,
     },
     {
+      year: 'SEP 2026',
+      title: 'High-Performance URL Shortener',
+      desc: 'Developed a URL shortening and analytics platform with Redis token-bucket rate limiting (Lua scripting), Redis-backed authentication state, Google OAuth, and Docker Compose.',
+      icon: Flag,
+    },
+    {
       year: 'CURRENT',
-      title: 'Target: Backend Internship',
-      desc: 'Seeking roles in backend engineering and scalable system architectures to work on production APIs and service load optimizations.',
+      title: 'Target: Software Engineering Internship',
+      desc: 'Seeking a Software Engineering Internship in Full-Stack & Backend Development to build production-grade systems and scale web services.',
       icon: Flag,
     }
   ];

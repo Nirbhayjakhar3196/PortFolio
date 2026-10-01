@@ -3,33 +3,51 @@ import { useFrame } from '@react-three/fiber';
 import { Html } from '@react-three/drei';
 import * as THREE from 'three';
 
-// Map of categories and descriptions for tooltips
+// Map of categories and descriptions for tooltips strictly based on resume & projects
 const skillProficiency = {
-  'React': { category: 'Frontend Framework', tag: 'Expert', desc: 'Hooks, context state trees' },
-  'Node.js': { category: 'Backend Runtime', tag: 'Advanced', desc: 'Asynchronous API runtimes' },
-  'MongoDB': { category: 'Database', tag: 'Advanced', desc: 'Aggregation pipelines & index schemas' },
-  'JavaScript': { category: 'Programming Language', tag: 'Expert', desc: 'ES6 scripts & async event loops' },
-  'Express': { category: 'Backend Framework', tag: 'Advanced', desc: 'API endpoints & middleware auth' },
-  'Tailwind': { category: 'CSS Framework', tag: 'Expert', desc: 'Utility classes & v4 design systems' },
-  'Git': { category: 'Version Control', tag: 'Advanced', desc: 'Branch checkouts, commits & merges' },
-  'Docker': { category: 'Containerization', tag: 'Intermediate', desc: 'Image builds & container instances' },
-  
-  // CS cores
-  'DSA': { category: 'CS Foundations', tag: 'Advanced', desc: 'Complexity algorithms & data structures' },
-  'OOP': { category: 'CS Foundations', tag: 'Advanced', desc: 'Objects, polymorphism & interfaces' },
-  'DBMS': { category: 'CS Foundations', tag: 'Advanced', desc: 'Schema models & query index optimization' },
-  'OS': { category: 'CS Foundations', tag: 'Advanced', desc: 'Memory pages & CPU task scheduling' },
-  
-  // Others
-  'Java': { category: 'Programming Language', tag: 'Expert', desc: 'Object architecture & data platforms' },
-  'Python': { category: 'Programming Language', tag: 'Advanced', desc: 'Script parsing & simple automation tools' },
-  'HTML5': { category: 'Markup Language', tag: 'Expert', desc: 'Semantic layouts & DOM accessibility' },
-  'CSS3': { category: 'Stylesheet Language', tag: 'Expert', desc: 'Flexbox templates & custom transitions' },
-  'REST APIs': { category: 'API Architecture', tag: 'Advanced', desc: 'Resource request & payload payloads' },
-  'GitHub': { category: 'Dev Platform', tag: 'Advanced', desc: 'Remote repositories & pull branches' },
-  'Postman': { category: 'API Client', tag: 'Advanced', desc: 'HTTP request testing & mock servers' },
-  'VS Code': { category: 'Code Editor', tag: 'Expert', desc: 'Extension scripts & debugging workspace' },
-  'Figma': { category: 'Design Tool', tag: 'Advanced', desc: 'UI canvas mocks & asset exports' }
+  // Languages
+  'Java': { category: 'Programming Language', tag: 'Core', desc: 'Object-oriented programming, data structures & algorithms' },
+  'JavaScript': { category: 'Programming Language', tag: 'Advanced', desc: 'ES6+, asynchronous event loops, and full-stack runtimes' },
+  'Python': { category: 'Programming Language', tag: 'Proficient', desc: 'Scripting, backend logic, and data processing pipelines' },
+  'SQL': { category: 'Database Querying', tag: 'Advanced', desc: 'Relational queries, schema design, filtering, and indexing' },
+
+  // Frontend
+  'React.js': { category: 'Frontend Framework', tag: 'Advanced', desc: 'Component architectures, state management, hooks & streams' },
+  'Next.js': { category: 'Full-Stack Framework', tag: 'Advanced', desc: 'App router, server-side APIs, layered routes & streaming' },
+  'Tailwind CSS': { category: 'Styling Framework', tag: 'Proficient', desc: 'Utility-first modern responsive UI systems' },
+  'HTML5': { category: 'Markup Language', tag: 'Core', desc: 'Semantic layouts, accessible DOM trees, and web standards' },
+  'CSS3': { category: 'Styling Language', tag: 'Core', desc: 'Responsive flexbox/grid architectures, keyframe animations' },
+
+  // Backend
+  'Node.js': { category: 'Backend Runtime', tag: 'Advanced', desc: 'Asynchronous event-driven I/O server runtimes' },
+  'Express.js': { category: 'Backend Framework', tag: 'Advanced', desc: 'RESTful API routing, middleware chains & error handling' },
+  'REST APIs': { category: 'API Architecture', tag: 'Advanced', desc: 'Layered service/repository patterns, pagination & sorting' },
+  'JWT Auth': { category: 'Security & Auth', tag: 'Advanced', desc: 'Stateless token issuance, verification, and protected routes' },
+  'Middleware': { category: 'Backend Architecture', tag: 'Advanced', desc: 'Request pipeline processing, rate limiting, and auth guards' },
+  'MVC Architecture': { category: 'System Architecture', tag: 'Advanced', desc: 'Separation of concerns across models, views, and controllers' },
+
+  // Databases
+  'PostgreSQL': { category: 'Relational Database', tag: 'Advanced', desc: 'Relational schemas, foreign keys, and ACID transactions' },
+  'MongoDB': { category: 'NoSQL Database', tag: 'Advanced', desc: 'Document data models, Mongoose schemas, and query indexing' },
+  'Prisma ORM': { category: 'ORM Tool', tag: 'Advanced', desc: 'Type-safe database client, schema migrations & relations' },
+
+  // AI & GenAI
+  'Gemini 2.5 Flash': { category: 'LLM & GenAI', tag: 'Advanced', desc: 'Prompt augmentation, structured reasoning & streaming responses' },
+  'RAG Pipelines': { category: 'AI Architecture', tag: 'Advanced', desc: 'Document-grounded retrieval-augmented generation flows' },
+  'PDF Parsing': { category: 'Data Processing', tag: 'Advanced', desc: 'Text extraction, cleaning, and 300-word overlapping chunking' },
+  'Embeddings': { category: 'Vector Representation', tag: 'Advanced', desc: 'Semantic vector generation for document chunks and queries' },
+  'Cosine Similarity': { category: 'Vector Search', tag: 'Advanced', desc: 'Top-3 context selection via mathematical similarity scores' },
+
+  // Tools & DevOps
+  'Redis': { category: 'In-Memory Store', tag: 'Advanced', desc: 'Token-bucket rate limiting with Lua scripting & auth caching' },
+  'Docker': { category: 'Containerization', tag: 'Proficient', desc: 'Multi-service containerization, Docker Compose & environments' },
+  'Git': { category: 'Version Control', tag: 'Advanced', desc: 'Branching workflows, commits, version tracking & releases' },
+  'GitHub': { category: 'Dev Platform', tag: 'Advanced', desc: 'Remote repositories, collaborative workflows & CI pipelines' },
+  'Postman': { category: 'API Testing', tag: 'Advanced', desc: 'REST endpoint testing, payload inspection & environment configs' },
+  'Zod Validation': { category: 'Schema Validation', tag: 'Advanced', desc: 'Type-safe runtime request and payload validation schemas' },
+  'bcryptjs': { category: 'Cryptography', tag: 'Advanced', desc: 'Secure cryptographic password hashing with salts' },
+  'Socket.io': { category: 'Real-time Comms', tag: 'Proficient', desc: 'Bidirectional WebSocket event streaming' },
+  'Vercel & Render': { category: 'Deployment', tag: 'Proficient', desc: 'Serverless frontend & cloud container service deployments' }
 };
 
 // Helper for dynamic colors and glows based on category
@@ -38,9 +56,9 @@ const getCategoryColor = (cat) => {
     case 'languages': return '#fee715'; // Yellow
     case 'frontend': return '#00f0ff'; // Cyan
     case 'backend': return '#ff007f'; // Magenta
-    case 'database': return '#39ff14'; // Green
-    case 'tools': return '#e2e8f0'; // White
-    case 'core': return '#a855f7'; // Purple
+    case 'databases': return '#39ff14'; // Green
+    case 'ai': return '#a855f7'; // Purple / Violet
+    case 'tools': return '#38bdf8'; // Sky Blue
     default: return '#00f0ff';
   }
 };
@@ -50,9 +68,9 @@ const getCategoryGlow = (cat, intensity = 0.25) => {
     case 'languages': return `rgba(254, 231, 21, ${intensity})`;
     case 'frontend': return `rgba(0, 240, 255, ${intensity})`;
     case 'backend': return `rgba(255, 0, 127, ${intensity})`;
-    case 'database': return `rgba(57, 255, 20, ${intensity})`;
-    case 'tools': return `rgba(226, 232, 240, ${intensity * 0.8})`;
-    case 'core': return `rgba(168, 85, 247, ${intensity})`;
+    case 'databases': return `rgba(57, 255, 20, ${intensity})`;
+    case 'ai': return `rgba(168, 85, 247, ${intensity})`;
+    case 'tools': return `rgba(56, 189, 248, ${intensity})`;
     default: return `rgba(0, 240, 255, ${intensity})`;
   }
 };
@@ -112,7 +130,7 @@ const SkillChip = React.memo(({ name, category, orbitRadius, initialAngle, speed
     meshRef.current.scale.set(scaleRef.current, scaleRef.current, scaleRef.current);
   });
 
-  const details = skillProficiency[name] || { category: 'Module', tag: 'Active', desc: 'NJ development module' };
+  const details = skillProficiency[name] || { category: 'Module', tag: 'Active', desc: 'Technical proficiency module' };
   const chipColor = getCategoryColor(category);
 
   return (
@@ -161,7 +179,7 @@ const SkillChip = React.memo(({ name, category, orbitRadius, initialAngle, speed
 
           {showTooltip && (
             <div 
-              className="absolute bottom-10 left-1/2 -translate-x-1/2 w-44 p-3 rounded-lg border bg-black/95 text-[10px] font-sans shadow-[0_0_25px_rgba(0,240,255,0.25)] pointer-events-none transition-all duration-200"
+              className="absolute bottom-10 left-1/2 -translate-x-1/2 w-48 p-3 rounded-lg border bg-black/95 text-[10px] font-sans shadow-[0_0_25px_rgba(0,240,255,0.25)] pointer-events-none transition-all duration-200"
               style={{
                 borderColor: chipColor,
                 boxShadow: `0 0 20px ${getCategoryGlow(category, 0.35)}, inset 0 0 10px rgba(0, 0, 0, 0.8)`,
@@ -207,13 +225,13 @@ const SkillsCore = ({ activeCategory = 'all' }) => {
   const [activeHighlightIndex, setActiveHighlightIndex] = useState(null);
 
   const highlightList = useMemo(() => [
-    'React',
+    'Next.js',
+    'React.js',
     'Node.js',
-    'MongoDB',
-    'JavaScript',
-    'Express',
-    'Tailwind',
-    'Git',
+    'PostgreSQL',
+    'Redis',
+    'Gemini 2.5 Flash',
+    'RAG Pipelines',
     'Docker'
   ], []);
 
@@ -237,8 +255,6 @@ const SkillsCore = ({ activeCategory = 'all' }) => {
     const interval = setInterval(() => {
       setActiveHighlightIndex((prev) => {
         const nextIndex = prev + 1;
-        // Highlight list has 8 skills (index 0 to 7)
-        // At index 8, it returns to normal state for one cycle (1.5 seconds)
         if (nextIndex > highlightList.length) {
           return 0; // restart loop
         }
@@ -307,47 +323,56 @@ const SkillsCore = ({ activeCategory = 'all' }) => {
     return [pos];
   }, [coreParticleCount]);
 
-  const skills = [
+  const skills = useMemo(() => [
     // Languages
     { name: 'Java', category: 'languages', r: 1.5, speed: 0.15 },
     { name: 'JavaScript', category: 'languages', r: 1.6, speed: 0.18 },
     { name: 'Python', category: 'languages', r: 1.7, speed: 0.12 },
+    { name: 'SQL', category: 'languages', r: 1.8, speed: 0.14 },
     
     // Frontend
-    { name: 'React', category: 'frontend', r: 2.2, speed: 0.1 },
-    { name: 'HTML5', category: 'frontend', r: 2.3, speed: 0.14 },
-    { name: 'CSS3', category: 'frontend', r: 2.4, speed: 0.11 },
-    { name: 'Tailwind', category: 'frontend', r: 2.5, speed: 0.08 },
+    { name: 'Next.js', category: 'frontend', r: 2.2, speed: 0.11 },
+    { name: 'React.js', category: 'frontend', r: 2.3, speed: 0.13 },
+    { name: 'Tailwind CSS', category: 'frontend', r: 2.4, speed: 0.09 },
+    { name: 'HTML5', category: 'frontend', r: 2.5, speed: 0.14 },
+    { name: 'CSS3', category: 'frontend', r: 2.6, speed: 0.10 },
     
     // Backend
     { name: 'Node.js', category: 'backend', r: 2.9, speed: 0.07 },
-    { name: 'Express', category: 'backend', r: 3.0, speed: 0.09 },
-    { name: 'REST APIs', category: 'backend', r: 3.1, speed: 0.06 },
+    { name: 'Express.js', category: 'backend', r: 3.0, speed: 0.09 },
+    { name: 'REST APIs', category: 'backend', r: 3.1, speed: 0.08 },
+    { name: 'JWT Auth', category: 'backend', r: 3.2, speed: 0.06 },
+    { name: 'Middleware', category: 'backend', r: 3.3, speed: 0.075 },
+    { name: 'MVC Architecture', category: 'backend', r: 3.4, speed: 0.065 },
     
-    // Database
-    { name: 'MongoDB', category: 'database', r: 3.4, speed: 0.05 },
+    // Databases
+    { name: 'PostgreSQL', category: 'databases', r: 3.6, speed: 0.055 },
+    { name: 'MongoDB', category: 'databases', r: 3.7, speed: 0.05 },
+    { name: 'Prisma ORM', category: 'databases', r: 3.8, speed: 0.06 },
+
+    // AI / GenAI
+    { name: 'Gemini 2.5 Flash', category: 'ai', r: 1.9, speed: 0.16 },
+    { name: 'RAG Pipelines', category: 'ai', r: 2.0, speed: 0.14 },
+    { name: 'PDF Parsing', category: 'ai', r: 2.1, speed: 0.12 },
+    { name: 'Embeddings', category: 'ai', r: 2.7, speed: 0.09 },
+    { name: 'Cosine Similarity', category: 'ai', r: 2.8, speed: 0.08 },
     
-    // Tools
-    { name: 'Git', category: 'tools', r: 3.8, speed: 0.04 },
-    { name: 'GitHub', category: 'tools', r: 3.9, speed: 0.045 },
-    { name: 'Docker', category: 'tools', r: 4.0, speed: 0.038 },
-    { name: 'Postman', category: 'tools', r: 4.1, speed: 0.042 },
-    { name: 'VS Code', category: 'tools', r: 4.2, speed: 0.03 },
-    { name: 'Figma', category: 'tools', r: 4.3, speed: 0.035 },
-    
-    // Core
-    { name: 'DSA', category: 'core', r: 1.1, speed: 0.22 },
-    { name: 'OOP', category: 'core', r: 1.2, speed: 0.2 },
-    { name: 'DBMS', category: 'core', r: 1.3, speed: 0.25 },
-    { name: 'OS', category: 'core', r: 1.4, speed: 0.23 }
-  ];
+    // Tools & DevOps
+    { name: 'Redis', category: 'tools', r: 3.9, speed: 0.045 },
+    { name: 'Docker', category: 'tools', r: 4.0, speed: 0.04 },
+    { name: 'Git', category: 'tools', r: 4.1, speed: 0.038 },
+    { name: 'GitHub', category: 'tools', r: 4.2, speed: 0.042 },
+    { name: 'Postman', category: 'tools', r: 4.3, speed: 0.035 },
+    { name: 'Zod Validation', category: 'tools', r: 4.4, speed: 0.03 },
+    { name: 'bcryptjs', category: 'tools', r: 4.5, speed: 0.032 }
+  ], []);
 
   const skillsWithAngles = useMemo(() => {
     return skills.map((skill, index) => ({
       ...skill,
-      initialAngle: (index * Math.PI * 2) / 6 + Math.random()
+      initialAngle: (index * Math.PI * 2) / 8 + (index * 0.35)
     }));
-  }, []);
+  }, [skills]);
 
   const highlightedSkillName = activeHighlightIndex !== null && activeHighlightIndex < highlightList.length
     ? highlightList[activeHighlightIndex]
